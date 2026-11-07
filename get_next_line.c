@@ -6,49 +6,64 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/03 17:26:52 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/06 11:58:51 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/07 12:10:29 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "get_next_line.h"
 
-static int	sizeLine(int fd, char	**str)
+static char	*size_line(int fd, char	*str)
 {
 	int		i;
 	int		j;
-	int		size;
 	char	*tmp;
+	char	*buffer;
+	int		bool_break;
 
-	j = 0;
-	tmp = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	i += read(fd, tmp, BUFFER_SIZE);
-	while (tmp[j] != '\n' || tmp[j])
-		j++;
-	i -= BUFFER_SIZE - j;
-	free(tmp - (BUFFER_SIZE - j));
-	size = ft_strjoin(*str, tmp);
-	free(tmp);
-	return (size);
+	bool_break = 0;
+	while (!bool_break)
+	{
+		j = 0;
+		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+		i += read(fd, buffer, BUFFER_SIZE);
+		while (buffer[j] != '\n' && buffer[j])
+			j++;
+		if (BUFFER_SIZE >= j && buffer[j] == '\n')
+			bool_break = 1;
+		i -= BUFFER_SIZE - j;
+		tmp = malloc(sizeof(char) * j);
+		tmp = ft_strncpy(tmp, buffer, j);
+		str = ft_strjoin(str, tmp);
+		free(buffer);
+		free(tmp);
+	}
+	str[i] = '\0';
+	return (str);
 }
 
 char	*get_next_line(int fd)
 {
 	char	*str;
-	int		count;
 
-	str = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	count = read(fd, str, BUFFER_SIZE);
+	str = size_line(fd, str);
 	return (str);
 }
 
-#include <fcntl.h>
-
-int	main(int argc, char **argv)
+int	main(void)
 {
-	int	i;
+	int		fd;
+	char	*line;
 
-	(void)argc;
-	i = open(argv[1], O_RDONLY);
-	write(1, get_next_line(i), BUFFER_SIZE);
+	fd = open("test.txt", O_RDONLY);
+	printf("%s", get_next_line(fd));
+	// while ((line = get_next_line(fd)) != NULL)
+	// {
+	// 	printf("%s", line);
+	// 	free(line);
+	// }
+	close(fd);
 	return (0);
 }

@@ -20,9 +20,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-char	*get_next_line(int fd);
-
 char	*ft_strjoin(char const *s1, char const *s2);
-size_t	ft_strlen(const char *s);
+char	*ft_strncpy(char *dest, const char *src, size_t n);
+
+char	*get_next_line(int fd);
 
 #endif

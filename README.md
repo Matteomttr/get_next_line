@@ -29,6 +29,15 @@ Allowed external functions: `read`, `malloc`, `free`.
 | `get_next_line_utils.c` | Helper functions |
 | `get_next_line.h` | Prototype, includes, `BUFFER_SIZE` default |
 
+### External functions
+
+| Function | Role |
+|------|------|
+| `ft_strlen` | Returns the length of a string |
+| `ft_strncpy` | Copies a string with a specified size |
+| `ft_strcat` | Concatenates two strings |
+| `ft_strjoin` | Concatenates two strings with a separator |
+
 ### Compilation
 
 The buffer size can be set at compile time:
