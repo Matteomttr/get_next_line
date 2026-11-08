@@ -6,65 +6,48 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/03 17:26:52 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/08 17:16:11 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/08 18:33:52 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "get_next_line.h"
 
-static char	*size_line(int fd, char	*str)
+static char	*recup_str(char *buffer, bool *bool_break, int *i)
 {
-	int			i;
-	int			j;
-	char		*tmp;
-	static char	*buffer;
-	int			bool_break;
+	int		j;
+	char	*tmp;
 
-	bool_break = 0;
-	i = 0;
-	while (!bool_break)
-	{
-		j = 0;
-		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-		i += read(fd, buffer, BUFFER_SIZE);
-		while (buffer[j] != '\n' && buffer[j] && buffer[j] != '\0')
-			j++;
-		if (BUFFER_SIZE >= j && buffer[j] == '\n' && buffer[j] != '\0')
-			bool_break = 1;
-		i -= BUFFER_SIZE - j;
-		tmp = malloc(sizeof(char) * j);
-		tmp = ft_strncpy(tmp, buffer, j);
-		str = ft_strjoin(str, tmp);
-		free(buffer);
-		free(tmp);
-	}
-	str[i] = '\0';
-	return (str);
+	j = 0;
+	while (buffer[j] != '\n' && buffer[j])
+		j++;
+	if (BUFFER_SIZE >= j && (buffer[j] == '\n' || !buffer[j]))
+		*bool_break = true;
+	*i -= BUFFER_SIZE - j;
+	tmp = malloc(sizeof(char) * j);
+	tmp = ft_strncpy(tmp, buffer, j);
+	return (tmp);
 }
 
 char	*get_next_line(int fd)
 {
-	char	*str;
+	int			i;
+	char		*str;
+	static char	*buffer;
+	bool		bool_break;
 
-	str = size_line(fd, str);
-	return (str);
-}
-
-int	main(void)
-{
-	int		fd;
-	char	*line;
-
-	fd = open("test.txt", O_RDONLY);
-	// printf("%s", get_next_line(fd));
-	while ((line = get_next_line(fd)) != NULL)
+	bool_break = false;
+	str = NULL;
+	if (fd < 0)
+		return (NULL);
+	while (!bool_break)
 	{
-		printf("%s", line);
-		free(line);
+		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+		if (!buffer)
+			return (NULL);
+		i += read(fd, buffer, BUFFER_SIZE);
+		buffer = recup_str(buffer, &bool_break, &i);
+		str = ft_strjoin(str, buffer);
 	}
-	close(fd);
-	return (0);
+	free(buffer);
+	return (str);
 }

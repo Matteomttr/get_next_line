@@ -19,6 +19,7 @@
 
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdbool.h>
 
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strncpy(char *dest, const char *src, size_t n);

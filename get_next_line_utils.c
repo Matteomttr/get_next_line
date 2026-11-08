@@ -6,7 +6,7 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/03 17:27:05 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/07 12:07:56 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/08 18:32:10 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ static size_t	ft_strlen(const char *s)
 	size_t	i;
 
 	i = 0;
-	while (s != NULL && s[i])
+	if (!s)
+		return (i);
+	while (s[i])
 		i++;
 	return (i);
 }
@@ -40,8 +42,12 @@ static char	*ft_strcat(char *dest, const char *src)
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*str;
+	size_t	lens1;
+	size_t	lens2;
 
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	lens1 = ft_strlen(s1);
+	lens2 = ft_strlen(s2);
+	str = malloc(sizeof(char) * (lens1 + lens2 + 1));
 	if (!str)
 		return (NULL);
 	str = ft_strcat(str, (char *)s1);
