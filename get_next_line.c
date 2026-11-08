@@ -6,7 +6,7 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/03 17:26:52 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/07 12:10:29 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/08 17:16:11 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,22 @@
 
 static char	*size_line(int fd, char	*str)
 {
-	int		i;
-	int		j;
-	char	*tmp;
-	char	*buffer;
-	int		bool_break;
+	int			i;
+	int			j;
+	char		*tmp;
+	static char	*buffer;
+	int			bool_break;
 
 	bool_break = 0;
+	i = 0;
 	while (!bool_break)
 	{
 		j = 0;
 		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		i += read(fd, buffer, BUFFER_SIZE);
-		while (buffer[j] != '\n' && buffer[j])
+		while (buffer[j] != '\n' && buffer[j] && buffer[j] != '\0')
 			j++;
-		if (BUFFER_SIZE >= j && buffer[j] == '\n')
+		if (BUFFER_SIZE >= j && buffer[j] == '\n' && buffer[j] != '\0')
 			bool_break = 1;
 		i -= BUFFER_SIZE - j;
 		tmp = malloc(sizeof(char) * j);
@@ -58,12 +59,12 @@ int	main(void)
 	char	*line;
 
 	fd = open("test.txt", O_RDONLY);
-	printf("%s", get_next_line(fd));
-	// while ((line = get_next_line(fd)) != NULL)
-	// {
-	// 	printf("%s", line);
-	// 	free(line);
-	// }
+	// printf("%s", get_next_line(fd));
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("%s", line);
+		free(line);
+	}
 	close(fd);
 	return (0);
 }
