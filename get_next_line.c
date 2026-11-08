@@ -6,7 +6,7 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/03 17:26:52 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/08 18:33:52 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/08 18:52:48 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char	*recup_str(char *buffer, bool *bool_break, int *i)
 	j = 0;
 	while (buffer[j] != '\n' && buffer[j])
 		j++;
-	if (BUFFER_SIZE >= j && (buffer[j] == '\n' || !buffer[j]))
+	if (BUFFER_SIZE >= j && buffer[j] == '\n')
 		*bool_break = true;
 	*i -= BUFFER_SIZE - j;
 	tmp = malloc(sizeof(char) * j);
@@ -39,6 +39,7 @@ char	*get_next_line(int fd)
 	str = NULL;
 	if (fd < 0)
 		return (NULL);
+	i = 0;
 	while (!bool_break)
 	{
 		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
@@ -49,5 +50,6 @@ char	*get_next_line(int fd)
 		str = ft_strjoin(str, buffer);
 	}
 	free(buffer);
+	str[i] = '\0';
 	return (str);
 }
