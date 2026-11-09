@@ -6,50 +6,51 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/03 17:26:52 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/08 18:52:48 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/09 09:52:46 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*recup_str(char *buffer, bool *bool_break, int *i)
+static int	get_line(char *buffer, bool *break_bool, int *i)
 {
-	int		j;
-	char	*tmp;
+	int	j;
 
 	j = 0;
 	while (buffer[j] != '\n' && buffer[j])
 		j++;
 	if (BUFFER_SIZE >= j && buffer[j] == '\n')
-		*bool_break = true;
+		*break_bool = true;
 	*i -= BUFFER_SIZE - j;
-	tmp = malloc(sizeof(char) * j);
-	tmp = ft_strncpy(tmp, buffer, j);
-	return (tmp);
+	return (j);
 }
 
 char	*get_next_line(int fd)
 {
+	char		*buffer;
+	static char	*line = NULL;
+	bool		break_bool;
 	int			i;
-	char		*str;
-	static char	*buffer;
-	bool		bool_break;
+	int			j;
 
-	bool_break = false;
-	str = NULL;
 	if (fd < 0)
 		return (NULL);
+	break_bool = false;
 	i = 0;
-	while (!bool_break)
+	j = 0;
+	while (!break_bool)
 	{
 		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		if (!buffer)
 			return (NULL);
 		i += read(fd, buffer, BUFFER_SIZE);
-		buffer = recup_str(buffer, &bool_break, &i);
-		str = ft_strjoin(str, buffer);
+		if (!buffer)
+			return (NULL);
+		j = get_line(buffer, &break_bool, &i);
+		buffer = ft_substr(buffer, 0, j);
+		line = ft_strjoin(line, buffer);
+		free(buffer);
 	}
-	free(buffer);
-	str[i] = '\0';
-	return (str);
+	line[i + 1] = '\0';
+	return (line);
 }

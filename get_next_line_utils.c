@@ -24,6 +24,34 @@ static size_t	ft_strlen(const char *s)
 	return (i);
 }
 
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*sub;
+	size_t	i;
+	size_t	s_len;
+
+	if (!s)
+		return (NULL);
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+	{
+		sub = malloc(1 * sizeof(char));
+		return (sub);
+	}
+	if (len > s_len - start)
+		len = s_len - start;
+	sub = malloc(len + 1 * sizeof(char));
+	if (!sub)
+		return (NULL);
+	i = 0;
+	while (i < len && s[start + i])
+	{
+		sub[i] = s[start + i];
+		i++;
+	}
+	return (sub);
+}
+
 static char	*ft_strcat(char *dest, const char *src)
 {
 	int	i;

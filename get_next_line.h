@@ -23,6 +23,7 @@
 
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strncpy(char *dest, const char *src, size_t n);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 char	*get_next_line(int fd);
 
