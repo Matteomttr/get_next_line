@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-static size_t	ft_strlen(const char *s)
+size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
@@ -81,22 +81,4 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	str = ft_strcat(str, (char *)s1);
 	str = ft_strcat(str, (char *)s2);
 	return (str);
-}
-
-char	*ft_strncpy(char *dest, const char *src, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n && src[i] != '\0')
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	while (i < n)
-	{
-		dest[i] = '\0';
-		i++;
-	}
-	return (dest);
 }
