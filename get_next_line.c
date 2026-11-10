@@ -19,12 +19,15 @@ char	*get_next_line(int fd)
 	bool		bool_break;
 	char		*line;
 	static char	*stay = NULL;
+	char		*tmp;
 	char		*buffer;
 
 	if (fd < 0)
 		return (NULL);
 	i = 0;
 	bool_break = false;
+	line = NULL;
+	tmp = NULL;
 	while (!bool_break)
 	{
 		j = 0;
@@ -37,10 +40,12 @@ char	*get_next_line(int fd)
 			j++;
 		if (BUFFER_SIZE >=j && buffer[j] == '\n')
 			bool_break = true;
-		line = ft_strjoin(line, ft_strjoin(stay, ft_substr(buffer, 0, j + 1)));
-		stay = ft_substr(buffer, j + 1, BUFFER_SIZE);
+		tmp = buffer;
+		buffer = ft_strjoin(stay, ft_substr(buffer, 0, j + 1));
+		line = ft_strjoin(line, buffer);
+		stay = ft_substr(tmp, j + 1, BUFFER_SIZE);
 	}
 	free(buffer);
-	line[ft_strlen(line) + 1] = '\0';
+	line[ft_strlen(line)] = '\0';
 	return (line);
 }
