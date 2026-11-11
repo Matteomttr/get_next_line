@@ -6,7 +6,7 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/03 17:27:05 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/08 18:32:10 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/11 18:31:58 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static size_t	ft_strlen(const char *s)
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	void	*ptr;
-	int		i;
+	size_t	i;
 
 	i = 0;
 	if (nmemb > 0 && (size_t)-1 / nmemb < size)

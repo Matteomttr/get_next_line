@@ -6,7 +6,7 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/10 19:05:02 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/11 17:53:08 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/11 19:12:31 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,24 @@ static char	*extract_line(char *src)
 	i = 0;
 	while (src[j] != '\n' && src[j])
 		j++;
-	dest = ft_calloc(sizeof(char), (j + 2));
+	if (src[j] == '\n')
+		j++;
+	dest = ft_calloc(sizeof(char), (j + 1));
+	if (!dest)
+		return (NULL);
 	while (i != j)
 	{
 		dest[i] = src[i];
 		i++;
 	}
-	dest[i] = '\n';
+	free(src);
 	return (dest);
 }
 
-static char	*buffer_init(char *buffer, int fd, int *i, char **line)
+static char	*buffer_init(char *buffer, int fd, char **line)
 {
+	int read_bytes;
+
 	buffer = ft_calloc(sizeof(char), (BUFFER_SIZE + 1));
 	if (!buffer)
 	{
@@ -41,13 +47,13 @@ static char	*buffer_init(char *buffer, int fd, int *i, char **line)
 			free(*line);
 		return (NULL);
 	}
-	*i = read(fd, buffer, BUFFER_SIZE);
-	if (*i == 0)
+	read_bytes = read(fd, buffer, BUFFER_SIZE);
+	if (read_bytes == 0)
 	{
 		free(buffer);
 		return (NULL);
 	}
-	if (*i < 0)
+	if (read_bytes == -1)
 	{
 		free(buffer);
 		if (*line)
@@ -61,23 +67,26 @@ char	*get_next_line(int fd)
 {
 	char		*buffer;
 	char		*line;
-	static char	*stay = NULL;
-	int			i;
+	char		*tmp;
+	static char	*stay;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
 	buffer = NULL;
 	line = stay;
-	i = 0;
-	while (!ft_strchr(line, '\n'))
+	while (!line || !ft_strchr(line, '\n'))
 	{
-		buffer = buffer_init(buffer, fd, &i, &line);
+		buffer = buffer_init(buffer, fd, &line);
 		if (!buffer)
+		{
+			free(stay);
+			stay = NULL;
 			return (NULL);
-		line = ft_strjoin(line, buffer);
-		free(buffer);
+		}
+		tmp = ft_strjoin(line, buffer);
+		line = tmp;
 	}
-	stay = ft_strchr(line, '\n') + 1;
+	free(buffer);
 	line = extract_line(line);
 	return (line);
 }
