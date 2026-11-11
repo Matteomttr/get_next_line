@@ -12,44 +12,37 @@
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+static size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
 	i = 0;
 	if (!s)
-		return (i);
+		return (0);
 	while (s[i])
 		i++;
 	return (i);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	char	*sub;
-	size_t	i;
-	size_t	s_len;
+	void	*ptr;
+	int		i;
 
-	if (!s)
-		return (NULL);
-	s_len = ft_strlen(s);
-	if (start >= s_len)
-	{
-		sub = malloc(1 * sizeof(char));
-		return (sub);
-	}
-	if (len > s_len - start)
-		len = s_len - start;
-	sub = malloc(len + 1 * sizeof(char));
-	if (!sub)
-		return (NULL);
 	i = 0;
-	while (i < len && s[start + i])
+	if (nmemb > 0 && (size_t)-1 / nmemb < size)
+		return (NULL);
+	ptr = malloc(nmemb * size);
+	if (nmemb == 0 || size == 0)
+		return (ptr);
+	if (!ptr)
+		return (NULL);
+	while (i != nmemb * size)
 	{
-		sub[i] = s[start + i];
+		((char *)ptr)[i] = '\0';
 		i++;
 	}
-	return (sub);
+	return (ptr);
 }
 
 static char	*ft_strcat(char *dest, const char *src)
@@ -58,8 +51,12 @@ static char	*ft_strcat(char *dest, const char *src)
 	int	len;
 
 	i = 0;
+	if (!dest)
+		return ((char *)src);
 	len = ft_strlen(dest);
-	while (src && src[i])
+	if (!src)
+		return (dest);
+	while (src[i])
 	{
 		dest[len + i] = src[i];
 		i++;
@@ -75,10 +72,32 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	lens1 = ft_strlen(s1);
 	lens2 = ft_strlen(s2);
-	str = malloc(sizeof(char) * (lens1 + lens2 + 1));
+	str = ft_calloc(sizeof(char), (lens1 + lens2 + 1));
 	if (!str)
 		return (NULL);
-	str = ft_strcat(str, (char *)s1);
-	str = ft_strcat(str, (char *)s2);
+	if (s1)
+		str = ft_strcat(str, (char *)s1);
+	if (s2)
+		str = ft_strcat(str, (char *)s2);
 	return (str);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	int		i;
+	char	*output;
+
+	i = 0;
+	output = (char *)s;
+	if (!s)
+		return (NULL);
+	while (s[i])
+	{
+		if (output[i] == (char)c)
+			return (output + i);
+		i++;
+	}
+	if (output[i] == (char)c)
+		return (output + i);
+	return (NULL);
 }

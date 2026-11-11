@@ -3,49 +3,81 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   by: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
+/*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   created: 2026/11/03 17:26:52 by mamatter          #+#    #+#             */
-/*   updated: 2026/11/09 09:52:46 by mamatter         ###   ########.fr       */
+/*   Created: 2026/11/10 19:05:02 by mamatter          #+#    #+#             */
+/*   Updated: 2026/11/11 17:53:08 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+static char	*extract_line(char *src)
+{
+	int		j;
+	int		i;
+	char	*dest;
+
+	j = 0;
+	i = 0;
+	while (src[j] != '\n' && src[j])
+		j++;
+	dest = ft_calloc(sizeof(char), (j + 2));
+	while (i != j)
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\n';
+	return (dest);
+}
+
+static char	*buffer_init(char *buffer, int fd, int *i, char **line)
+{
+	buffer = ft_calloc(sizeof(char), (BUFFER_SIZE + 1));
+	if (!buffer)
+	{
+		if (*line)
+			free(*line);
+		return (NULL);
+	}
+	*i = read(fd, buffer, BUFFER_SIZE);
+	if (*i == 0)
+	{
+		free(buffer);
+		return (NULL);
+	}
+	if (*i < 0)
+	{
+		free(buffer);
+		if (*line)
+			free(*line);
+		return (NULL);
+	}
+	return (buffer);
+}
+
 char	*get_next_line(int fd)
 {
-	int			i;
-	int			j;
-	bool		bool_break;
+	char		*buffer;
 	char		*line;
 	static char	*stay = NULL;
-	char		*tmp;
-	char		*buffer;
+	int			i;
 
-	if (fd < 0)
+	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
+	buffer = NULL;
+	line = stay;
 	i = 0;
-	bool_break = false;
-	line = NULL;
-	tmp = NULL;
-	while (!bool_break)
+	while (!ft_strchr(line, '\n'))
 	{
-		j = 0;
-		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+		buffer = buffer_init(buffer, fd, &i, &line);
 		if (!buffer)
 			return (NULL);
-		if (read(fd, buffer, BUFFER_SIZE) <= 0)
-			return (NULL);
-		while (buffer[j] != '\n' && buffer[j])
-			j++;
-		if (BUFFER_SIZE >=j && buffer[j] == '\n')
-			bool_break = true;
-		tmp = buffer;
-		buffer = ft_strjoin(stay, ft_substr(buffer, 0, j + 1));
 		line = ft_strjoin(line, buffer);
-		stay = ft_substr(tmp, j + 1, BUFFER_SIZE);
+		free(buffer);
 	}
-	free(buffer);
-	line[ft_strlen(line)] = '\0';
+	stay = ft_strchr(line, '\n') + 1;
+	line = extract_line(line);
 	return (line);
 }
