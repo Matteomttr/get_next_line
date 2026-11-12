@@ -6,11 +6,12 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/10 19:05:02 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/12 22:15:22 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/12 22:24:07 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdlib.h>
 #include <unistd.h>
 
 char	*ft_getline(char *stay)
@@ -40,7 +41,7 @@ char	*ft_stay(char *stay)
 {
 	char	*new_stay;
 	int		i;
-	int		j;
+	size_t	j;
 
 	i = 0;
 	j = 0;
@@ -59,10 +60,11 @@ char	*ft_stay(char *stay)
 	return (new_stay);
 }
 
-char	*ft_process_line(char **ptr_stay)
+char	*ft_process_line(char **ptr_stay, char *buffer)
 {
 	char		*line;
 
+	free(buffer);
 	line = ft_getline(*ptr_stay);
 	if (!line)
 		return (NULL);
@@ -70,6 +72,13 @@ char	*ft_process_line(char **ptr_stay)
 	if (!*ptr_stay)
 		return (NULL);
 	return (line);
+}
+
+void	ft_free_all(char **ptr_stay, char *buffer)
+{
+	free(*ptr_stay);
+	*ptr_stay = NULL;
+	free(buffer);
 }
 
 char	*get_next_line(int fd)
@@ -90,15 +99,13 @@ char	*get_next_line(int fd)
 		read_bytes = read(fd, buffer, BUFFER_SIZE);
 		if (read_bytes <= 0)
 		{
-			free(stay[fd]);
-			free(buffer);
+			ft_free_all(&stay[fd], buffer);
 			return (NULL);
 		}
 		tmp = ft_strjoin(stay[fd], buffer);
 		free(stay[fd]);
 		stay[fd] = tmp;
 	}
-	line = ft_process_line(&stay[fd]);
-	free(buffer);
+	line = ft_process_line(&stay[fd], buffer);
 	return (line);
 }
