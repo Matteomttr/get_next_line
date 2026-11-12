@@ -6,87 +6,99 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/10 19:05:02 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/11 19:12:31 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/12 22:15:22 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <unistd.h>
 
-static char	*extract_line(char *src)
+char	*ft_getline(char *stay)
 {
+	char	*line;
 	int		j;
 	int		i;
-	char	*dest;
 
-	j = 0;
 	i = 0;
-	while (src[j] != '\n' && src[j])
+	j = 0;
+	while (stay[j] != '\n' && stay[j])
 		j++;
-	if (src[j] == '\n')
+	if (stay[j] == '\n')
 		j++;
-	dest = ft_calloc(sizeof(char), (j + 1));
-	if (!dest)
+	line = ft_calloc(sizeof(char), j + 1);
+	if (!line)
 		return (NULL);
-	while (i != j)
+	while (i < j)
 	{
-		dest[i] = src[i];
+		line[i] = stay[i];
 		i++;
 	}
-	free(src);
-	return (dest);
+	return (line);
 }
 
-static char	*buffer_init(char *buffer, int fd, char **line)
+char	*ft_stay(char *stay)
 {
-	int read_bytes;
+	char	*new_stay;
+	int		i;
+	int		j;
 
-	buffer = ft_calloc(sizeof(char), (BUFFER_SIZE + 1));
-	if (!buffer)
-	{
-		if (*line)
-			free(*line);
+	i = 0;
+	j = 0;
+	while (stay[i] != '\n' && stay[i])
+		i++;
+	i++;
+	new_stay = ft_calloc(sizeof(char), ft_strlen(&stay[i]) + 1);
+	if (!new_stay)
 		return (NULL);
-	}
-	read_bytes = read(fd, buffer, BUFFER_SIZE);
-	if (read_bytes == 0)
+	while (j < ft_strlen(&stay[i]))
 	{
-		free(buffer);
-		return (NULL);
+		new_stay[j] = stay[i + j];
+		j++;
 	}
-	if (read_bytes == -1)
-	{
-		free(buffer);
-		if (*line)
-			free(*line);
+	free(stay);
+	return (new_stay);
+}
+
+char	*ft_process_line(char **ptr_stay)
+{
+	char		*line;
+
+	line = ft_getline(*ptr_stay);
+	if (!line)
 		return (NULL);
-	}
-	return (buffer);
+	*ptr_stay = ft_stay(*ptr_stay);
+	if (!*ptr_stay)
+		return (NULL);
+	return (line);
 }
 
 char	*get_next_line(int fd)
 {
 	char		*buffer;
+	static char	*stay[1024];
+	int			read_bytes;
 	char		*line;
 	char		*tmp;
-	static char	*stay;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	buffer = NULL;
-	line = stay;
-	while (!line || !ft_strchr(line, '\n'))
+	buffer = ft_calloc(sizeof(char), (BUFFER_SIZE + 1));
+	if (!buffer)
+		return (NULL);
+	while (!ft_strchr(stay[fd], '\n'))
 	{
-		buffer = buffer_init(buffer, fd, &line);
-		if (!buffer)
+		read_bytes = read(fd, buffer, BUFFER_SIZE);
+		if (read_bytes <= 0)
 		{
-			free(stay);
-			stay = NULL;
+			free(stay[fd]);
+			free(buffer);
 			return (NULL);
 		}
-		tmp = ft_strjoin(line, buffer);
-		line = tmp;
+		tmp = ft_strjoin(stay[fd], buffer);
+		free(stay[fd]);
+		stay[fd] = tmp;
 	}
+	line = ft_process_line(&stay[fd]);
 	free(buffer);
-	line = extract_line(line);
 	return (line);
 }

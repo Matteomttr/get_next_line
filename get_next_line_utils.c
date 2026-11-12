@@ -6,13 +6,13 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/03 17:27:05 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/11 18:31:58 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/12 21:24:26 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static size_t	ft_strlen(const char *s)
+size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
