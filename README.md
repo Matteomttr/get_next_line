@@ -29,14 +29,6 @@ Allowed external functions: `read`, `malloc`, `free`.
 | `get_next_line_utils.c` | Helper functions |
 | `get_next_line.h` | Prototype, includes, `BUFFER_SIZE` default |
 
-### Bonus files
-
-| Bonus file | Role |
-|------|------|
-| `get_next_line_bonus.c` | Main bonus function |
-| `get_next_line_utils_bonus.c` | Helper bonus functions |
-| `get_next_line_bonus.h` | Prototype, includes, `BUFFER_SIZE` and `FD_SIZE` default |
-
 ### External functions
 
 | Function | Role |
@@ -48,13 +40,21 @@ Allowed external functions: `read`, `malloc`, `free`.
 
 ### Compilation
 
-The buffer size can be set at compile time:
+The buffer size can be set at compile time.
+
+**Mandatory part:**
 
 ```bash
 cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c main.c
 ```
 
-If `-D BUFFER_SIZE` is not provided, a default value is defined in `get_next_line.h`.
+**Bonus part** (multiple file descriptors, using the `_bonus` files):
+
+```bash
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line_bonus.c get_next_line_utils_bonus.c main_bonus.c
+```
+
+If `-D BUFFER_SIZE` is not provided, a default value is defined in `get_next_line.h` (and `get_next_line_bonus.h` for the bonus).
 
 ### Usage example
 
@@ -76,6 +76,37 @@ int main(void)
 		free(line);
 	}
 	close(fd);
+	return (0);
+}
+```
+
+### Usage example (bonus: multiple file descriptors)
+
+```c
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "get_next_line_bonus.h"
+
+int main(void)
+{
+	int		fd1;
+	int		fd2;
+	char	*line;
+
+	fd1 = open("file1.txt", O_RDONLY);
+	fd2 = open("file2.txt", O_RDONLY);
+	line = get_next_line(fd1);
+	printf("fd1: %s", line);
+	free(line);
+	line = get_next_line(fd2);
+	printf("fd2: %s", line);
+	free(line);
+	line = get_next_line(fd1);
+	printf("fd1: %s", line);
+	free(line);
+	close(fd1);
+	close(fd2);
 	return (0);
 }
 ```
