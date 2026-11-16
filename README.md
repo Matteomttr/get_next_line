@@ -6,16 +6,16 @@
 
 **Get Next Line** is a C function that returns one line at a time from a file descriptor.
 The goal of the project is to learn how **open** and **read** work in C
-(`<unistd.h>`) and to write clean, well-structured code.
+(`<unistd.h>`).
 
 ```c
 char *get_next_line(int fd);
 ```
 
-- Each call returns the next line, including the terminating `\n` (except for the last line if the file does not end with one).
-- It returns `NULL` when there is nothing left to read or if an error occurs.
-- It works with regular files as well as standard input.
-- It relies on a **static variable** to keep what has been read but not yet returned between two calls.
+- each call returns the next line, including the terminating `\n` (except for the last line if the file does not end with one).
+- it returns `null` when there is nothing left to read or if an error occurs.
+- it works with regular files as well as standard input.
+- it relies on a **static variable** to keep what has been read but not yet returned between two calls.
 
 Allowed external functions: `read`, `malloc`, `free`.
 
