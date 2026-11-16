@@ -29,6 +29,14 @@ Allowed external functions: `read`, `malloc`, `free`.
 | `get_next_line_utils.c` | Helper functions |
 | `get_next_line.h` | Prototype, includes, `BUFFER_SIZE` default |
 
+### Bonus files
+
+| Bonus file | Role |
+|------|------|
+| `get_next_line_bonus.c` | Main bonus function |
+| `get_next_line_utils_bonus.c` | Helper bonus functions |
+| `get_next_line_bonus.h` | Prototype, includes, `BUFFER_SIZE` and `FD_SIZE` default |
+
 ### External functions
 
 | Function | Role |
