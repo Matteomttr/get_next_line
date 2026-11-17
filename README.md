@@ -25,7 +25,7 @@ Allowed external functions: `read`, `malloc`, `free`.
 
 | File | Role |
 |------|------|
-| `get_next_line.c` | Main function |
+| `get_next_line.c` | Main funtion returns one line at a time from a file descriptor. |
 | `get_next_line_utils.c` | Helper functions |
 | `get_next_line.h` | Prototype, includes, `BUFFER_SIZE` default |
 

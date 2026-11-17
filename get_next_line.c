@@ -6,12 +6,13 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/10 19:05:02 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/16 13:23:32 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/17 11:57:33 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+/* Extracts the next line from the stored buffer. */
 static char	*ft_getline(char *stay)
 {
 	char	*line;
@@ -35,6 +36,7 @@ static char	*ft_getline(char *stay)
 	return (line);
 }
 
+/* Keeps the remaining characters after the extracted line. */
 static char	*ft_stay(char *stay)
 {
 	char	*new_stay;
@@ -64,6 +66,7 @@ static char	*ft_stay(char *stay)
 	return (new_stay);
 }
 
+/* Processes the extracted line and updates the stored buffer. */
 static char	*ft_process_line(char **ptr_stay, char *buffer)
 {
 	char		*line;
@@ -82,6 +85,7 @@ static char	*ft_process_line(char **ptr_stay, char *buffer)
 	return (line);
 }
 
+/* Reads data from the file descriptor and appends it to the buffer. */
 static void	ft_read_file(char **stay, char *buffer, int *read_bytes, int fd)
 {
 	char	*tmp;
@@ -99,6 +103,7 @@ static void	ft_read_file(char **stay, char *buffer, int *read_bytes, int fd)
 	*stay = tmp;
 }
 
+/* Main funtion returns one line at a time from a file descriptor. */
 char	*get_next_line(int fd)
 {
 	char		*buffer;
@@ -116,7 +121,10 @@ char	*get_next_line(int fd)
 	{
 		ft_read_file(&stay, buffer, &read_bytes, fd);
 		if (!stay)
-			return (free(buffer), NULL);
+		{
+			free(buffer);
+			return (NULL);
+		}
 	}
 	line = ft_process_line(&stay, buffer);
 	return (line);
