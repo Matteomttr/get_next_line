@@ -6,12 +6,13 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/03 17:27:05 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/16 11:10:57 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/17 12:10:57 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
+/* Returns the length of a string. */
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
@@ -24,6 +25,7 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
+/* Allocates memory and sets it to zero. */
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	void	*ptr;
@@ -45,6 +47,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (ptr);
 }
 
+/* Appends a string at the end of another. */
 static char	*ft_strcat(char *dest, const char *src)
 {
 	int	i;
@@ -64,6 +67,7 @@ static char	*ft_strcat(char *dest, const char *src)
 	return (dest);
 }
 
+/* Returns a new string made of two strings put together. */
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*str;
@@ -82,6 +86,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (str);
 }
 
+/* Finds the first occurrence of a character in a string. */
 char	*ft_strchr(const char *s, int c)
 {
 	int		i;

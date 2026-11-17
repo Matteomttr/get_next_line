@@ -21,13 +21,21 @@ Allowed external functions: `read`, `malloc`, `free`.
 
 ## Instructions
 
-### Files
+### Original file
 
 | File | Role |
 |------|------|
 | `get_next_line.c` | Main funtion returns one line at a time from a file descriptor. |
 | `get_next_line_utils.c` | Helper functions |
 | `get_next_line.h` | Prototype, includes, `BUFFER_SIZE` default |
+
+### Bonus file
+
+| File | Role |
+|------|------|
+| `get_next_line_bonus.c` | Main function returns one line at a time from multiple file descriptors. |
+| `get_next_line_utils_bonus.c` | Helper functions |
+| `get_next_line_bonus.h` | Prototype, includes, `BUFFER_SIZE` and `FD_SIZE` default |
 
 ### External functions
 
@@ -64,13 +72,15 @@ If `-D BUFFER_SIZE` is not provided, a default value is defined in `get_next_lin
 #include <stdlib.h>
 #include "get_next_line.h"
 
-int main(void)
+int main(int argc, char **argv)
 {
 	int		fd;
 	char	*line;
 
-	fd = open("test.txt", O_RDONLY);
-	while ((line = get_next_line(fd)) != NULL)
+	if (argv != 2)
+		return (1);
+	fd = open(argv[1], O_RDONLY);
+	while ((line = get_next_line(fd)))
 	{
 		printf("%s", line);
 		free(line);
@@ -86,27 +96,33 @@ int main(void)
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "get_next_line_bonus.h"
 
-int main(void)
+int	main(int argc, char **argv)
 {
-	int		fd1;
-	int		fd2;
+	int		fd;
+	int		i;
 	char	*line;
 
-	fd1 = open("file1.txt", O_RDONLY);
-	fd2 = open("file2.txt", O_RDONLY);
-	line = get_next_line(fd1);
-	printf("fd1: %s", line);
-	free(line);
-	line = get_next_line(fd2);
-	printf("fd2: %s", line);
-	free(line);
-	line = get_next_line(fd1);
-	printf("fd1: %s", line);
-	free(line);
-	close(fd1);
-	close(fd2);
+	if (argc < 2)
+		return (1);
+	i = 1;
+	while (i < argc)
+	{
+		fd = open(argv[i], O_RDONLY);
+		if (fd == -1)
+			return (1);
+		line = get_next_line(fd);
+		while (line)
+		{
+			printf("%s", line);
+			free(line);
+			line = get_next_line(fd);
+		}
+		close(fd);
+		i++;
+	}
 	return (0);
 }
 ```
