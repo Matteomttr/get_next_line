@@ -6,7 +6,7 @@
 /*   By: mamatter <mamatter@student.42angouleme.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/10 19:05:02 by mamatter          #+#    #+#             */
-/*   Updated: 2026/11/17 12:08:30 by mamatter         ###   ########.fr       */
+/*   Updated: 2026/11/17 14:31:00 by mamatter         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,10 @@ char	*get_next_line(int fd)
 	{
 		ft_read_file(&stay[fd], buffer, &read_bytes, fd);
 		if (!stay[fd])
-			return (free(buffer), NULL);
+		{
+			free(buffer);
+			return (NULL);
+		}
 	}
 	line = ft_process_line(&stay[fd], buffer);
 	return (line);
