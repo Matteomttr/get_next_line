@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 	int		fd;
 	char	*line;
 
-	if (argv != 2)
+	if (argc != 2)
 		return (1);
 	fd = open(argv[1], O_RDONLY);
 	while ((line = get_next_line(fd)))
